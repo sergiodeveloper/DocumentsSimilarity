@@ -9,7 +9,7 @@ public class MainWindow extends Application {
 	private static final String TITLE = "Documents Similarity";
 
 	public static void main(final String[] args) {
-		Application.launch(args);
+		Application.launch(MainWindow.class, args);
 	}
 
 	@Override
