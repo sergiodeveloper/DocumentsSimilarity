@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -48,7 +49,21 @@ public class MainWindowController {
 
 	@FXML
 	public void castSimilarities() {
+		List<File> selectedDocuments = new ArrayList<>();
+		for (Entry<File, CheckBox> entry : checkBoxes.entrySet()) {
+			if (entry.getValue().isSelected()) {
+				selectedDocuments.add(entry.getKey());
+			}
+		}
 
+		if(selectedDocuments.size() < 2) {
+			Alert errorAlert = new Alert(AlertType.INFORMATION);
+			errorAlert.setHeaderText("Por favor, selecione mais documentos");
+			errorAlert.showAndWait();
+		} else {
+			ComparisonWindow comparisonWindow = new ComparisonWindow(selectedDocuments);
+			comparisonWindow.start();
+		}
 	}
 
 	@FXML

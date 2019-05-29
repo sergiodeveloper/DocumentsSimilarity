@@ -27,11 +27,24 @@
   -fx-background-color: #cbe1f3;
 }
 .titled-pane .check-box > .box {
-    -fx-padding: 4px;
+  -fx-padding: 4px;
 }
 .titled-pane .check-box > .box > .mark {
-    -fx-padding: 10px;
+  -fx-padding: 10px;
 }
+
+.title {
+  -fx-background-color: #e0e0e0;
+}
+
+.tool-bar {
+  -fx-background-color: #595959;
+}
+
+#canvasParent {
+  -fx-background-color: white;
+}
+
 
 
 
