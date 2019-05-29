@@ -23,7 +23,7 @@ public class ComparisonWindow {
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/comparison_window.fxml"));
 
-		ComparisonWindowController controller = new ComparisonWindowController(this);
+		ComparisonWindowController controller = new ComparisonWindowController(stage);
 		loader.setController(controller);
 
 		Scene scene;

@@ -75,7 +75,7 @@ public class MainWindowController {
 			folderPathLabel.setText(EMPTY_FOLDER_TEXT);
 			folder = null;
 		} else {
-			folderPathLabel.setText(selectedFolder.getName());
+			folderPathLabel.setText("Pasta selecionada: " + selectedFolder.getName());
 			folder = selectedFolder;
 		}
 

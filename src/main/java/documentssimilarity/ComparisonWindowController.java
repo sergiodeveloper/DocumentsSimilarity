@@ -1,10 +1,13 @@
 package documentssimilarity;
 
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class ComparisonWindowController {
 
@@ -22,23 +25,33 @@ public class ComparisonWindowController {
 	@FXML
 	private Button galaxyButton;
 
-	private final ComparisonWindow comparisonWindow;
+	private final Stage stage;
 	private CanvasController canvasController;
 
-	public ComparisonWindowController(final ComparisonWindow comparisonWindow) {
-		this.comparisonWindow = comparisonWindow;
+	public ComparisonWindowController(final Stage stage) {
+		this.stage = stage;
 	}
 
 	public void init() {
 		canvasController = new CanvasController(canvas);
 
-		canvasParent.widthProperty().addListener((o, old, value) -> {
-			canvas.setWidth(value.doubleValue());
-			refreshCanvas();
+		stage.widthProperty().addListener((o, old, value) -> {
+			canvas.setWidth(0);
+			PauseTransition delay = new PauseTransition(Duration.millis(10));
+			delay.setOnFinished(event -> {
+				canvas.setWidth(canvasParent.getWidth());
+				refreshCanvas();
+			});
+			delay.play();
 		});
-		canvasParent.heightProperty().addListener((o, old, value) -> {
-			canvas.setHeight(value.doubleValue());
-			refreshCanvas();
+		stage.heightProperty().addListener((o, old, value) -> {
+			canvas.setHeight(0);
+			PauseTransition delay = new PauseTransition(Duration.millis(10));
+			delay.setOnFinished(event -> {
+				canvas.setHeight(canvasParent.getHeight());
+				refreshCanvas();
+			});
+			delay.play();
 		});
 
 		canvas.setWidth(canvasParent.getWidth());
