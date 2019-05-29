@@ -56,7 +56,7 @@ public class MainWindowController {
 			}
 		}
 
-		if(selectedDocuments.size() < 2) {
+		if (selectedDocuments.size() < 2) {
 			Alert errorAlert = new Alert(AlertType.INFORMATION);
 			errorAlert.setHeaderText("Por favor, selecione mais documentos");
 			errorAlert.showAndWait();
@@ -91,6 +91,8 @@ public class MainWindowController {
 
 	private void updateDocumentsList() throws IOException {
 		filesContainer.getChildren().clear();
+		documents.clear();
+		checkBoxes.clear();
 
 		if (folder != null) {
 			Files.walkFileTree(folder.toPath(), new FileVisitor<Path>() {
