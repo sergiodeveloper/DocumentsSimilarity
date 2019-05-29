@@ -3,7 +3,8 @@
 	<img alt="Documents Similarity logo" src="https://raw.githubusercontent.com/sergiodeveloper/DocumentsSimilarity/master/src/main/resources/icon.png" />
 </p>
 
-#Documents Similarity
+
+# Documents Similarity
 
 <p align="center">Trabalho escolar. Software que representa a semelhança entre documentos usando leiaute baseado em projeção dimensional.</p>
 
