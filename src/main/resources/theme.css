@@ -1,0 +1,37 @@
+
+.button {
+  -fx-background-color: #2294ed;
+  -fx-text-fill: white;
+  -fx-font-weight: bold;
+  -fx-cursor: hand;
+  -fx-padding: 7px 15px;
+}
+.button:hover {
+  -fx-background-color: #3288cc;
+}
+.button:pressed {
+  -fx-background-color: #3073a9;
+}
+
+.titled-pane > .title {
+  -fx-background-color: #d8e5ef;
+}
+
+.titled-pane .check-box {
+  -fx-display: block;
+  -fx-pref-width: 10000;
+  -fx-padding: 5px;
+  -fx-cursor: hand;
+}
+.titled-pane .check-box:selected {
+  -fx-background-color: #cbe1f3;
+}
+.titled-pane .check-box > .box {
+    -fx-padding: 4px;
+}
+.titled-pane .check-box > .box > .mark {
+    -fx-padding: 10px;
+}
+
+
+
