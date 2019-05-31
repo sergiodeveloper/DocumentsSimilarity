@@ -1,4 +1,4 @@
-package documentssimilarity.windows.comparison;
+package documentssimilarity.window.comparison;
 
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;

@@ -1,7 +1,8 @@
-package documentssimilarity.windows.comparison;
+package documentssimilarity.window.comparison;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,8 +16,10 @@ public class ComparisonWindow {
 
 	private static final String TITLE = "Similaridade entre documentos";
 
+	List<File> documents = new ArrayList<>();
+	
 	public ComparisonWindow(final List<File> documents) {
-		// TODO salvar lista de documentos
+		this.documents = documents;
 	}
 
 	public void start() {

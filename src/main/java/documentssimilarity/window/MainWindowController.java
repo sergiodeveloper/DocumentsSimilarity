@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import documentssimilarity.windows.comparison.ComparisonWindow;
+import documentssimilarity.window.comparison.ComparisonWindow;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
