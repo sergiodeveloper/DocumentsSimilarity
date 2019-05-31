@@ -17,7 +17,7 @@ public class ComparisonWindow {
 	private static final String TITLE = "Similaridade entre documentos";
 
 	List<File> documents = new ArrayList<>();
-	
+
 	public ComparisonWindow(final List<File> documents) {
 		this.documents = documents;
 	}
@@ -52,6 +52,10 @@ public class ComparisonWindow {
 		stage.show();
 
 		stage.centerOnScreen();
+
+		controller.process();
+
+		controller.draw();
 	}
 
 }

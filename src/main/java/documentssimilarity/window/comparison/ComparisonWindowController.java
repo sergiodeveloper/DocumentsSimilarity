@@ -50,21 +50,21 @@ public class ComparisonWindowController {
 		canvasController = new CanvasController(canvas);
 		configureStage();
 		configureCanvas();
-		
+	}
+
+	public void draw() {
+		refreshCanvas();
+	}
+
+	public void process() {
 		try {
 			List<Document> documents = readDocuments();
-			
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setHeaderText(documents.size() + " arquivos lidos com sucesso.");
-			alert.showAndWait();
 			
 		} catch (IOException e) {
 			Alert errorAlert = new Alert(AlertType.ERROR);
 			errorAlert.setHeaderText("Erro ao ler os arquivos.");
 			errorAlert.showAndWait();
 		}
-		
-		refreshCanvas();
 	}
 
 	private void configureCanvas() {
@@ -78,7 +78,7 @@ public class ComparisonWindowController {
 			PauseTransition delay = new PauseTransition(Duration.millis(10));
 			delay.setOnFinished(event -> {
 				canvas.setWidth(canvasParent.getWidth());
-				refreshCanvas();
+				draw();
 			});
 			delay.play();
 		});
@@ -87,7 +87,7 @@ public class ComparisonWindowController {
 			PauseTransition delay = new PauseTransition(Duration.millis(10));
 			delay.setOnFinished(event -> {
 				canvas.setHeight(canvasParent.getHeight());
-				refreshCanvas();
+				draw();
 			});
 			delay.play();
 		});
