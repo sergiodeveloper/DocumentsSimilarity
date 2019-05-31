@@ -1,8 +1,20 @@
 package documentssimilarity.window.comparison;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import documentssimilarity.model.Document;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -27,14 +39,40 @@ public class ComparisonWindowController {
 
 	private final Stage stage;
 	private CanvasController canvasController;
+	private List<File> documentsToRead;
 
-	public ComparisonWindowController(final Stage stage) {
+	public ComparisonWindowController(final Stage stage, List<File> documents) {
 		this.stage = stage;
+		this.documentsToRead = documents;
 	}
 
 	public void init() {
 		canvasController = new CanvasController(canvas);
+		configureStage();
+		configureCanvas();
+		
+		try {
+			List<Document> documents = readDocuments();
+			
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setHeaderText(documents.size() + " arquivos lidos com sucesso.");
+			alert.showAndWait();
+			
+		} catch (IOException e) {
+			Alert errorAlert = new Alert(AlertType.ERROR);
+			errorAlert.setHeaderText("Erro ao ler os arquivos.");
+			errorAlert.showAndWait();
+		}
+		
+		refreshCanvas();
+	}
 
+	private void configureCanvas() {
+		canvas.setWidth(canvasParent.getWidth());
+		canvas.setHeight(canvasParent.getHeight());
+	}
+
+	private void configureStage() {
 		stage.widthProperty().addListener((o, old, value) -> {
 			canvas.setWidth(0);
 			PauseTransition delay = new PauseTransition(Duration.millis(10));
@@ -53,10 +91,21 @@ public class ComparisonWindowController {
 			});
 			delay.play();
 		});
-
-		canvas.setWidth(canvasParent.getWidth());
-		canvas.setHeight(canvasParent.getHeight());
-		refreshCanvas();
+	}
+	
+	private List<Document> readDocuments() throws IOException {
+		List<Document> documents = new ArrayList<>();
+		for (File document : documentsToRead) {
+			Logger.getLogger(getClass().getSimpleName()).log(Level.INFO, "Lendo arquivo: " + document.getName());
+			
+			Document doc = new Document();
+			doc.setName(document.getName());
+			doc.setLines(Files.readAllLines(Paths.get(document.getAbsolutePath())));
+			
+			documents.add(doc);
+		}
+		
+		return documents;
 	}
 
 	private void refreshCanvas() {
