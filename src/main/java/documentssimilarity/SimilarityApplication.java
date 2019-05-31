@@ -1,6 +1,6 @@
 package documentssimilarity;
 
-import documentssimilarity.windows.MainWindow;
+import documentssimilarity.window.MainWindow;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
