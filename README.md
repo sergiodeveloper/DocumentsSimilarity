@@ -13,4 +13,5 @@
 1. [Baixar o eclipse](https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/2019-03/R/eclipse-java-2019-03-R-linux-gtk-x86_64.tar.gz)
 2. Instalar JavaFX: `sudo apt-get install openjfx`
 3. Instalar o [plugin e(fx)clipse](https://marketplace.eclipse.org/content/efxclipse) arrastando botão "Install" para dentro do Eclipse 
+4. Instalar o [plugin lombok](https://projectlombok.org/download)
 
