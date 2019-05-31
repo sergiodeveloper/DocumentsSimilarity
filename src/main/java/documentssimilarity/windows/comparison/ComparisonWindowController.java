@@ -1,4 +1,4 @@
-package documentssimilarity;
+package documentssimilarity.windows.comparison;
 
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
@@ -65,12 +65,28 @@ public class ComparisonWindowController {
 
 	@FXML
 	public void namesButtonAction() {
-
+		changeTextNamesButton();
 	}
 
 	@FXML
 	public void galaxyButtonAction() {
+		changeTextGalaxyButton();
+	}
 
+	private void changeTextNamesButton() {
+		if(SHOW_NAMES.equals(namesButton.getText())) {
+			namesButton.setText(HIDE_NAMES);
+		}else {
+			namesButton.setText(SHOW_NAMES);
+		}
+	}
+	
+	private void changeTextGalaxyButton() {
+		if(SHOW_GALAXY.equals(galaxyButton.getText())) {
+			galaxyButton.setText(HIDE_GALAXY);
+		}else {
+			galaxyButton.setText(SHOW_GALAXY);
+		}
 	}
 
 }

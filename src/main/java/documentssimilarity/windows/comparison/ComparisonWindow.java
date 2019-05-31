@@ -1,4 +1,4 @@
-package documentssimilarity;
+package documentssimilarity.windows.comparison;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,7 @@ public class ComparisonWindow {
 	private static final String TITLE = "Similaridade entre documentos";
 
 	public ComparisonWindow(final List<File> documents) {
+		// TODO salvar lista de documentos
 	}
 
 	public void start() {

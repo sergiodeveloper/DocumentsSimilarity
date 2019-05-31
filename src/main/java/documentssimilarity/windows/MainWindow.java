@@ -1,21 +1,23 @@
-package documentssimilarity;
+package documentssimilarity.windows;
 
-import javafx.application.Application;
+import java.io.IOException;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-public class MainWindow extends Application {
-
+public class MainWindow {
+	
 	private static final String TITLE = "Documents Similarity";
-
-	public static void main(final String[] args) {
-		Application.launch(MainWindow.class, args);
+	
+	private Stage stage;
+	
+	public MainWindow(Stage stage) {
+		this.stage = stage;
 	}
-
-	@Override
-	public void start(final Stage stage) throws Exception {
+	
+	public void start() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/main_window.fxml"));
 
 		MainWindowController controller = new MainWindowController(stage);

@@ -1,4 +1,4 @@
-package documentssimilarity;
+package documentssimilarity.windows;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import documentssimilarity.windows.comparison.ComparisonWindow;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -49,20 +50,15 @@ public class MainWindowController {
 
 	@FXML
 	public void castSimilarities() {
-		List<File> selectedDocuments = new ArrayList<>();
-		for (Entry<File, CheckBox> entry : checkBoxes.entrySet()) {
-			if (entry.getValue().isSelected()) {
-				selectedDocuments.add(entry.getKey());
-			}
-		}
+		List<File> selectedDocuments = getSelectedDocuments();
 
-		if (selectedDocuments.size() < 2) {
+		if (checksQuantity(selectedDocuments)) {
+			ComparisonWindow comparisonWindow = new ComparisonWindow(selectedDocuments);
+			comparisonWindow.start();
+		} else {
 			Alert errorAlert = new Alert(AlertType.INFORMATION);
 			errorAlert.setHeaderText("Por favor, selecione mais documentos");
 			errorAlert.showAndWait();
-		} else {
-			ComparisonWindow comparisonWindow = new ComparisonWindow(selectedDocuments);
-			comparisonWindow.start();
 		}
 	}
 
@@ -87,6 +83,24 @@ public class MainWindowController {
 			errorAlert.setContentText("Tente escolher outra pasta");
 			errorAlert.showAndWait();
 		}
+	}
+
+	private boolean checksQuantity(List<File> selectedDocuments) {
+		if (selectedDocuments.size() < 2) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private List<File> getSelectedDocuments() {
+		List<File> selectedDocuments = new ArrayList<>();
+		for (Entry<File, CheckBox> entry : checkBoxes.entrySet()) {
+			if (entry.getValue().isSelected()) {
+				selectedDocuments.add(entry.getKey());
+			}
+		}
+		return selectedDocuments;
 	}
 
 	private void updateDocumentsList() throws IOException {
