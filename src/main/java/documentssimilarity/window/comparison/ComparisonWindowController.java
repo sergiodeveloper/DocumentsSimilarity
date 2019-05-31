@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import documentssimilarity.model.Document;
+import documentssimilarity.processor.SimilarityProcessor;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -40,6 +41,7 @@ public class ComparisonWindowController {
 	private final Stage stage;
 	private CanvasController canvasController;
 	private List<File> documentsToRead;
+	private Object someObjectNotCreatedYetForResultOfProcess;
 
 	public ComparisonWindowController(final Stage stage, List<File> documents) {
 		this.stage = stage;
@@ -52,19 +54,20 @@ public class ComparisonWindowController {
 		configureCanvas();
 	}
 
-	public void draw() {
-		refreshCanvas();
-	}
-
 	public void process() {
 		try {
 			List<Document> documents = readDocuments();
-			
+			someObjectNotCreatedYetForResultOfProcess = SimilarityProcessor.process(documents);
 		} catch (IOException e) {
 			Alert errorAlert = new Alert(AlertType.ERROR);
 			errorAlert.setHeaderText("Erro ao ler os arquivos.");
 			errorAlert.showAndWait();
 		}
+	}
+	
+	public void draw() {
+		// TODO - usa objeto resultante do processamento para desenhar
+		refreshCanvas();
 	}
 
 	private void configureCanvas() {
