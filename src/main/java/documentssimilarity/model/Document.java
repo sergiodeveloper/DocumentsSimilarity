@@ -12,4 +12,10 @@ public class Document {
 	private String name;
 	private List<String> lines;
 	
+	public void removeFromAllLines(String word) {
+		for (String line : lines) {
+			line = line.replaceAll(word, "");
+		}
+	}
+	
 }

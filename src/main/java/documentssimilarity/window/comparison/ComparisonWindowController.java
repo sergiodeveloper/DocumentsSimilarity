@@ -2,15 +2,10 @@ package documentssimilarity.window.comparison;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import documentssimilarity.model.Document;
 import documentssimilarity.processor.SimilarityProcessor;
+import documentssimilarity.reader.DocumentReader;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -40,12 +35,11 @@ public class ComparisonWindowController {
 
 	private final Stage stage;
 	private CanvasController canvasController;
-	private List<File> documentsToRead;
-	private Object someObjectNotCreatedYetForResultOfProcess;
+	private List<File> documents;
 
 	public ComparisonWindowController(final Stage stage, List<File> documents) {
 		this.stage = stage;
-		this.documentsToRead = documents;
+		this.documents = documents;
 	}
 
 	public void init() {
@@ -56,15 +50,14 @@ public class ComparisonWindowController {
 
 	public void process() {
 		try {
-			List<Document> documents = readDocuments();
-			someObjectNotCreatedYetForResultOfProcess = SimilarityProcessor.process(documents);
+			SimilarityProcessor.process(DocumentReader.read(documents));
 		} catch (IOException e) {
 			Alert errorAlert = new Alert(AlertType.ERROR);
 			errorAlert.setHeaderText("Erro ao ler os arquivos.");
 			errorAlert.showAndWait();
 		}
 	}
-	
+
 	public void draw() {
 		// TODO - usa objeto resultante do processamento para desenhar
 		refreshCanvas();
@@ -95,21 +88,6 @@ public class ComparisonWindowController {
 			delay.play();
 		});
 	}
-	
-	private List<Document> readDocuments() throws IOException {
-		List<Document> documents = new ArrayList<>();
-		for (File document : documentsToRead) {
-			Logger.getLogger(getClass().getSimpleName()).log(Level.INFO, "Lendo arquivo: " + document.getName());
-			
-			Document doc = new Document();
-			doc.setName(document.getName());
-			doc.setLines(Files.readAllLines(Paths.get(document.getAbsolutePath())));
-			
-			documents.add(doc);
-		}
-		
-		return documents;
-	}
 
 	private void refreshCanvas() {
 		canvasController.fillCircle(40, Color.GOLD, 200, 200);
@@ -126,17 +104,17 @@ public class ComparisonWindowController {
 	}
 
 	private void changeTextNamesButton() {
-		if(SHOW_NAMES.equals(namesButton.getText())) {
+		if (SHOW_NAMES.equals(namesButton.getText())) {
 			namesButton.setText(HIDE_NAMES);
-		}else {
+		} else {
 			namesButton.setText(SHOW_NAMES);
 		}
 	}
-	
+
 	private void changeTextGalaxyButton() {
-		if(SHOW_GALAXY.equals(galaxyButton.getText())) {
+		if (SHOW_GALAXY.equals(galaxyButton.getText())) {
 			galaxyButton.setText(HIDE_GALAXY);
-		}else {
+		} else {
 			galaxyButton.setText(SHOW_GALAXY);
 		}
 	}
