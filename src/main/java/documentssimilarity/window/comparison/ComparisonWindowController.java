@@ -50,7 +50,8 @@ public class ComparisonWindowController {
 
 	public void process() {
 		try {
-			SimilarityProcessor.process(DocumentReader.read(documents));
+			SimilarityProcessor processor = new SimilarityProcessor();
+			processor.process(DocumentReader.read(documents));
 		} catch (IOException e) {
 			Alert errorAlert = new Alert(AlertType.ERROR);
 			errorAlert.setHeaderText("Erro ao ler os arquivos.");

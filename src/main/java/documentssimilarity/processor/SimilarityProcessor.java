@@ -1,31 +1,50 @@
 package documentssimilarity.processor;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import documentssimilarity.model.Document;
 import documentssimilarity.model.StopWord;
 
 public class SimilarityProcessor {
-	
-	public static Object process(List<Document> documents){
+
+	private Logger LOGGER = Logger.getLogger(getClass().getSimpleName());
+
+	public Object process(List<Document> documents) {
 		for (Document document : documents) {
-			removeStopWords(document);
-			removePunctuation(document);
+			LOGGER.log(Level.INFO, document.getName());
+			LOGGER.log(Level.INFO, "Texto original:" + document.getAllText());
+
+			this.removePunctuation(document);
+			this.removeCustomizedStopWords(document);
+
+			LOGGER.log(Level.INFO, "Texto modificado:" + document.getAllText());
+			
+			calculateQuantityWords();
+
 			// TODO - realizar processamento
 		}
 		return new Object();
 	}
 
-	private static void removePunctuation(Document document) {
-		document.getLines().stream().forEach(l -> l.replaceAll("[^a-zA-Z ]", ""));
+	private void calculateQuantityWords() {
+		// TODO calcular quantidade de vezes que cada palavra aparece no documento
+		
 	}
 
-	private static void removeStopWords(Document document) {
-		Arrays.stream(StopWord.values())
-			.map(s -> s.getWords())
-			.flatMap(List<String>::stream)
-			.forEach(w -> document.removeFromAllLines(w));
+	// FIXME It's doesn't work
+	private void removePunctuation(Document document) {
+		for (String line : document.getLines()) {
+			line = line.replaceAll("\\p{Punct}", "");
+		}
+	}
+
+	// FIXME It's doesn't work
+	private void removeCustomizedStopWords(Document document) {
+		for (String stopWord : StopWord.getStopWords()) {
+			document.removeFromAllLines(stopWord);
+		}
 	}
 
 }

@@ -14,8 +14,17 @@ public class Document {
 	
 	public void removeFromAllLines(String word) {
 		for (String line : lines) {
-			line = line.replaceAll(word, "");
+			line = line.replace(word, "");
 		}
+	}
+	
+	public String getAllText() {
+		StringBuilder sb = new StringBuilder();
+		for (String line : lines) {
+			sb.append(line);
+		}
+		
+		return sb.toString();
 	}
 	
 }
