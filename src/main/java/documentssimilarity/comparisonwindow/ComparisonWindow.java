@@ -1,4 +1,4 @@
-package documentssimilarity.window.comparison;
+package documentssimilarity.comparisonwindow;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,8 +41,6 @@ public class ComparisonWindow {
 		scene.getStylesheets().add("/theme.css");
 		stage.setScene(scene);
 
-		controller.init();
-
 		stage.setTitle(TITLE);
 		stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 
@@ -50,12 +48,9 @@ public class ComparisonWindow {
 		stage.setHeight(500);
 
 		stage.show();
-
 		stage.centerOnScreen();
 
-		controller.process();
-
-		controller.draw();
+		controller.init();
 	}
 
 }

@@ -1,4 +1,4 @@
-package documentssimilarity.window;
+package documentssimilarity.mainwindow;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import documentssimilarity.window.comparison.ComparisonWindow;
+import documentssimilarity.comparisonwindow.ComparisonWindow;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -52,7 +52,7 @@ public class MainWindowController {
 	public void castSimilarities() {
 		List<File> selectedDocuments = getSelectedDocuments();
 
-		if (checksQuantity(selectedDocuments)) {
+		if (selectedDocuments.size() >= 2) {
 			ComparisonWindow comparisonWindow = new ComparisonWindow(selectedDocuments);
 			comparisonWindow.start();
 		} else {
@@ -83,14 +83,6 @@ public class MainWindowController {
 			errorAlert.setContentText("Tente escolher outra pasta");
 			errorAlert.showAndWait();
 		}
-	}
-
-	private boolean checksQuantity(List<File> selectedDocuments) {
-		if (selectedDocuments.size() < 2) {
-			return false;
-		}
-
-		return true;
 	}
 
 	private List<File> getSelectedDocuments() {

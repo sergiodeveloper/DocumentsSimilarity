@@ -1,4 +1,4 @@
-package documentssimilarity.window;
+package documentssimilarity.mainwindow;
 
 import java.io.IOException;
 

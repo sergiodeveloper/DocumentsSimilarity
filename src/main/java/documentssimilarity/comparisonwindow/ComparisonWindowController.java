@@ -1,11 +1,11 @@
-package documentssimilarity.window.comparison;
+package documentssimilarity.comparisonwindow;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import documentssimilarity.processor.DocumentReader;
 import documentssimilarity.processor.SimilarityProcessor;
-import documentssimilarity.reader.DocumentReader;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -35,9 +35,9 @@ public class ComparisonWindowController {
 
 	private final Stage stage;
 	private CanvasController canvasController;
-	private List<File> documents;
+	private final List<File> documents;
 
-	public ComparisonWindowController(final Stage stage, List<File> documents) {
+	public ComparisonWindowController(final Stage stage, final List<File> documents) {
 		this.stage = stage;
 		this.documents = documents;
 	}
@@ -46,23 +46,20 @@ public class ComparisonWindowController {
 		canvasController = new CanvasController(canvas);
 		configureStage();
 		configureCanvas();
+		process();
+		draw();
 	}
 
-	public void process() {
+	private void process() {
 		try {
-			SimilarityProcessor processor = new SimilarityProcessor();
 			DocumentReader reader = new DocumentReader();
-			processor.process(reader.read(documents));
+			SimilarityProcessor processor = new SimilarityProcessor(reader.read(documents));
+			processor.process();
 		} catch (IOException e) {
 			Alert errorAlert = new Alert(AlertType.ERROR);
 			errorAlert.setHeaderText("Erro ao ler os arquivos.");
 			errorAlert.showAndWait();
 		}
-	}
-
-	public void draw() {
-		// TODO - usa objeto resultante do processamento para desenhar
-		refreshCanvas();
 	}
 
 	private void configureCanvas() {
@@ -91,7 +88,8 @@ public class ComparisonWindowController {
 		});
 	}
 
-	private void refreshCanvas() {
+	private void draw() {
+		// TODO - usa objeto resultante do processamento para desenhar
 		canvasController.fillCircle(40, Color.GOLD, 200, 200);
 	}
 

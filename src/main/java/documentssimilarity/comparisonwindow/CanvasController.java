@@ -1,4 +1,4 @@
-package documentssimilarity.window.comparison;
+package documentssimilarity.comparisonwindow;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
