@@ -8,10 +8,11 @@ public class StopWord {
 	List<String> words;
 
 	public static List<String> getStopWords() {
-		return Arrays.asList("a", "e", "i", "o", "u", 
-				"ante", "até", "após", "com", "contra", "de", 
-				"desde", "em", "entre", "para", "por", "perante", 
-				"ser", "sem", "sob", "sobre", "traz");
+		return Arrays.asList("a", "e", "i", "o", "u",
+				"ante", "até", "após", "com", "contra", "de",
+				"desde", "em", "entre", "para", "por", "perante",
+				"ser", "sem", "sob", "sobre", "traz",
+				" ", "  ");
 	}
 
 }

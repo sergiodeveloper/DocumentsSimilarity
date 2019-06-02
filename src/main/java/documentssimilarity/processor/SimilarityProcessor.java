@@ -9,19 +9,18 @@ import documentssimilarity.model.StopWord;
 
 public class SimilarityProcessor {
 
-	private Logger LOGGER = Logger.getLogger(getClass().getSimpleName());
+	private final Logger LOGGER = Logger.getLogger(this.getClass().getSimpleName());
 
-	public Object process(List<Document> documents) {
-		for (Document document : documents) {
-			LOGGER.log(Level.INFO, document.getName());
-			LOGGER.log(Level.INFO, "Texto original:" + document.getAllText());
+	public Object process(final List<Document> documents) {
+		for (final Document document : documents) {
+			this.LOGGER.log(Level.INFO, document.getName());
+			this.LOGGER.log(Level.INFO, "Texto original:" + document.getAllText());
 
-			this.removePunctuation(document);
 			this.removeCustomizedStopWords(document);
 
-			LOGGER.log(Level.INFO, "Texto modificado:" + document.getAllText());
-			
-			calculateQuantityWords();
+			this.LOGGER.log(Level.INFO, "Texto modificado:" + document.getAllText());
+
+			this.calculateQuantityWords();
 
 			// TODO - realizar processamento
 		}
@@ -30,20 +29,12 @@ public class SimilarityProcessor {
 
 	private void calculateQuantityWords() {
 		// TODO calcular quantidade de vezes que cada palavra aparece no documento
-		
+
 	}
 
-	// FIXME It's doesn't work
-	private void removePunctuation(Document document) {
-		for (String line : document.getLines()) {
-			line = line.replaceAll("\\p{Punct}", "");
-		}
-	}
-
-	// FIXME It's doesn't work
-	private void removeCustomizedStopWords(Document document) {
-		for (String stopWord : StopWord.getStopWords()) {
-			document.removeFromAllLines(stopWord);
+	private void removeCustomizedStopWords(final Document document) {
+		for (final String stopWord : StopWord.getStopWords()) {
+			document.getWords().removeIf(stopWord::equals);
 		}
 	}
 
