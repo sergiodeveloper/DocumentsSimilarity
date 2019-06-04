@@ -24,13 +24,6 @@
 						<target>1.8</target>
 					</configuration>
 				</plugin>
-				<plugin>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>${surefire.version}</version>
-					<configuration>
-						<useSystemClassLoader>false</useSystemClassLoader>
-					</configuration>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -59,6 +52,13 @@
 			<version>3.9</version>
 		</dependency>
 
+		<dependency>
+			<groupId>de.unikonstanz.inf</groupId>
+			<artifactId>mdsj</artifactId>
+			<version>0.2</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/local-jars/mdsj.jar</systemPath>
+		</dependency>
 
 	</dependencies>
 </project>

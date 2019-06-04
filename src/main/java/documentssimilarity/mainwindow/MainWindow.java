@@ -1,6 +1,7 @@
 package documentssimilarity.mainwindow;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,17 +9,18 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class MainWindow {
-	
+
 	private static final String TITLE = "Documents Similarity";
-	
-	private Stage stage;
-	
-	public MainWindow(Stage stage) {
+
+	private final Stage stage;
+
+	public MainWindow(final Stage stage) {
 		this.stage = stage;
 	}
-	
+
 	public void start() throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/main_window.fxml"));
+		URL resource = getClass().getResource("/main_window.fxml");
+		FXMLLoader loader = new FXMLLoader(resource);
 
 		MainWindowController controller = new MainWindowController(stage);
 		loader.setController(controller);
@@ -30,7 +32,7 @@ public class MainWindow {
 		controller.init();
 
 		stage.setTitle(TITLE);
-		stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("icon.png")));
 
 		stage.setWidth(650);
 		stage.setHeight(450);
