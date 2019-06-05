@@ -1,5 +1,6 @@
 package documentssimilarity.model;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,30 +12,30 @@ public class DocumentMetadata {
 	private final Map<String, Integer> wordCount = new LinkedHashMap<>();
 
 	public void addWord(final String word) {
-		numberOfWords++;
-		if (!wordCount.containsKey(word)) {
-			wordCount.put(word, 0);
+		this.numberOfWords++;
+		if (!this.wordCount.containsKey(word)) {
+			this.wordCount.put(word, 0);
 		}
-		wordCount.put(word, wordCount.get(word) + 1);
+		this.wordCount.put(word, this.wordCount.get(word) + 1);
 	}
 
 	/**
 	 * Declares word in map but does not increment it.
 	 */
 	public void declareWord(final String word) {
-		if (!wordCount.containsKey(word)) {
-			wordCount.put(word, 0);
+		if (!this.wordCount.containsKey(word)) {
+			this.wordCount.put(word, 0);
 		}
 	}
 
 	public int size() {
-		return wordCount.size();
+		return this.wordCount.size();
 	}
 
 	public int[] getWordCountVector() {
-		int[] vector = new int[wordCount.size()];
+		final int[] vector = new int[this.wordCount.size()];
 		int index = 0;
-		for (Entry<String, Integer> entry : wordCount.entrySet()) {
+		for (final Entry<String, Integer> entry : this.wordCount.entrySet()) {
 			vector[index] = entry.getValue();
 			index++;
 		}
@@ -42,17 +43,21 @@ public class DocumentMetadata {
 	}
 
 	public double[] getFrequenciesVector() {
-		int[] wordCountVector = getWordCountVector();
-		double[] frequencies = new double[wordCountVector.length];
+		final int[] wordCountVector = this.getWordCountVector();
+		final double[] frequencies = new double[wordCountVector.length];
 
 		for (int i = 0; i < wordCountVector.length; i++) {
-			frequencies[i] = wordCountVector[i] / (double) numberOfWords;
+			frequencies[i] = wordCountVector[i] / (double) this.numberOfWords;
 		}
 		return frequencies;
 	}
 
 	public int count(final String word) {
-		return !wordCount.containsKey(word) ? 0 : wordCount.get(word);
+		return !this.wordCount.containsKey(word) ? 0 : this.wordCount.get(word);
+	}
+
+	public Map<String, Integer> getWordCount(){
+		return Collections.unmodifiableMap(this.wordCount);
 	}
 
 }
