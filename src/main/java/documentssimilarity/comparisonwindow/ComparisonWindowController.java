@@ -9,6 +9,7 @@ import documentssimilarity.model.Point;
 import documentssimilarity.processor.DocumentReader;
 import documentssimilarity.processor.SimilarityProcessor;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
@@ -19,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -28,6 +30,9 @@ public class ComparisonWindowController {
 	private static final String HIDE_NAMES = "Ocultar nomes";
 	private static final String SHOW_GALAXY = "Exibir Galaxy";
 	private static final String HIDE_GALAXY = "Ocultar Galaxy";
+
+	private static final int GLOW_RADIUS = 100;
+	private static final int POINT_RADIUS = 15;
 
 	@FXML
 	private VBox canvasParent;
@@ -57,7 +62,7 @@ public class ComparisonWindowController {
 	public void init() {
 		canvasController = new CanvasController(canvas);
 		configureStage();
-		udateCanvasSize();
+		updateCanvasSize();
 		process();
 		draw();
 	}
@@ -75,11 +80,14 @@ public class ComparisonWindowController {
 			warningAlert.setContentText("Verifique se estão acessíveis e se tratam de arquivos de texto");
 			warningAlert.showAndWait();
 		}
+		draw();
 	}
 
-	private void udateCanvasSize() {
-		canvas.setWidth(canvasParent.getWidth());
-		canvas.setHeight(canvasParent.getHeight());
+	private void updateCanvasSize() {
+		Platform.runLater(() -> {
+			canvas.setWidth(canvasParent.getWidth());
+			canvas.setHeight(canvasParent.getHeight());
+		});
 	}
 
 	private void configureStage() {
@@ -104,27 +112,41 @@ public class ComparisonWindowController {
 	}
 
 	private void draw() {
-		udateCanvasSize();
-		normalize(canvas.getWidth(), canvas.getHeight());
-		canvasController.clear();
-		for (Point point : points) {
-			double x = point.getX();
-			double y = point.getY();
-			String label = point.getLabel();
-
-			int glowRadius = 100;
+		Platform.runLater(() -> {
+			canvasController.clear();
+			updateCanvasSize();
+			if (points == null) {
+				Font font = new Font(20);
+				canvasController.fillText("Por favor aguarde...", Color.BLACK, font, 100, 100);
+				return;
+			}
+			normalize(canvas.getWidth(), canvas.getHeight());
 
 			if (showingGalaxy) {
-				RadialGradient paint = new RadialGradient(0, 0, x, y, glowRadius, false, CycleMethod.NO_CYCLE,
-						new Stop(0, new Color(0.5, 0.6, 1, 0.3)), new Stop(1, Color.TRANSPARENT));
-				canvasController.fillCircle(glowRadius, paint, x, y);
+				for (Point point : points) {
+					double x = point.getX();
+					double y = point.getY();
+					RadialGradient paint = new RadialGradient(0, 0, x, y, GLOW_RADIUS, false, CycleMethod.NO_CYCLE,
+							new Stop(0, new Color(0.5, 0.6, 1, 0.3)), new Stop(1, Color.TRANSPARENT));
+					canvasController.fillCircle(GLOW_RADIUS, paint, x, y);
+				}
 			}
-			canvasController.fillCircle(20, new Color(0.5, 0.5, 0, 0.5), x, y);
-			canvasController.strokeCircle(20, 1, Color.BLACK, x, y);
+			for (Point point : points) {
+				double x = point.getX();
+				double y = point.getY();
+				canvasController.fillCircle(POINT_RADIUS, new Color(0.5, 0.5, 0, 0.5), x, y);
+				canvasController.strokeCircle(POINT_RADIUS, 1, Color.BLACK, x, y);
+			}
 			if (showingNames) {
-				canvasController.fillText(label, Color.BLACK, x + 27, y + 4);
+				for (Point point : points) {
+					double x = point.getX();
+					double y = point.getY();
+					String label = point.getLabel();
+					Font font = new Font(12);
+					canvasController.fillText(label, Color.BLACK, font, x + POINT_RADIUS * 1.4, y + POINT_RADIUS / 3.0);
+				}
 			}
-		}
+		});
 	}
 
 	private synchronized void normalize(final double canvasWidth, final double canvasHeight) {

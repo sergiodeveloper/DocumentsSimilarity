@@ -53,7 +53,7 @@ public class ComparisonWindow {
 		stage.show();
 		stage.centerOnScreen();
 
-		controller.init();
+		new Thread(controller::init).start();
 	}
 
 }
