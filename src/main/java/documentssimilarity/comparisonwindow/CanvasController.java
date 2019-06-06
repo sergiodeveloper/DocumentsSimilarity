@@ -23,4 +23,16 @@ public class CanvasController {
 		g.fillOval(x - radius, y - radius, radius, radius);
 	}
 
+	public void strokeCircle(final double radius, final double border, final Color color, final double x,
+			final double y) {
+		g.setStroke(color);
+		g.setLineWidth(border);
+		g.strokeOval(x - radius, y - radius, radius, radius);
+	}
+
+	public void fillText(final String text, final Color color, final double x, final double y) {
+		g.setFill(color);
+		g.fillText(text, x, y);
+	}
+
 }

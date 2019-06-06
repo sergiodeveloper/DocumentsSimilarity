@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import documentssimilarity.model.Point;
 import documentssimilarity.processor.DocumentReader;
 import documentssimilarity.processor.SimilarityProcessor;
 import javafx.animation.PauseTransition;
@@ -36,16 +37,20 @@ public class ComparisonWindowController {
 	private final Stage stage;
 	private CanvasController canvasController;
 	private final List<File> documents;
+	private final boolean useTfIdf;
 
-	public ComparisonWindowController(final Stage stage, final List<File> documents) {
+	private List<Point> points;
+
+	public ComparisonWindowController(final Stage stage, final List<File> documents, final boolean useTfIdf) {
 		this.stage = stage;
 		this.documents = documents;
+		this.useTfIdf = useTfIdf;
 	}
 
 	public void init() {
 		canvasController = new CanvasController(canvas);
 		configureStage();
-		configureCanvas();
+		udateCanvasSize();
 		process();
 		draw();
 	}
@@ -54,7 +59,7 @@ public class ComparisonWindowController {
 		try {
 			DocumentReader reader = new DocumentReader();
 			SimilarityProcessor processor = new SimilarityProcessor(reader.read(documents));
-			processor.process();
+			points = processor.process(useTfIdf);
 		} catch (IOException e) {
 			Alert errorAlert = new Alert(AlertType.ERROR);
 			errorAlert.setHeaderText("Erro ao ler os arquivos.");
@@ -62,7 +67,7 @@ public class ComparisonWindowController {
 		}
 	}
 
-	private void configureCanvas() {
+	private void udateCanvasSize() {
 		canvas.setWidth(canvasParent.getWidth());
 		canvas.setHeight(canvasParent.getHeight());
 	}
@@ -70,7 +75,7 @@ public class ComparisonWindowController {
 	private void configureStage() {
 		stage.widthProperty().addListener((o, old, value) -> {
 			canvas.setWidth(0);
-			PauseTransition delay = new PauseTransition(Duration.millis(10));
+			PauseTransition delay = new PauseTransition(Duration.millis(100));
 			delay.setOnFinished(event -> {
 				canvas.setWidth(canvasParent.getWidth());
 				draw();
@@ -79,7 +84,7 @@ public class ComparisonWindowController {
 		});
 		stage.heightProperty().addListener((o, old, value) -> {
 			canvas.setHeight(0);
-			PauseTransition delay = new PauseTransition(Duration.millis(10));
+			PauseTransition delay = new PauseTransition(Duration.millis(100));
 			delay.setOnFinished(event -> {
 				canvas.setHeight(canvasParent.getHeight());
 				draw();
@@ -89,8 +94,37 @@ public class ComparisonWindowController {
 	}
 
 	private void draw() {
-		// TODO - usa objeto resultante do processamento para desenhar
-		canvasController.fillCircle(40, Color.GOLD, 200, 200);
+		udateCanvasSize();
+		normalize(canvas.getWidth(), canvas.getHeight());
+		for (Point point : points) {
+			double x = point.getX();
+			double y = point.getY();
+			String label = point.getLabel();
+
+			canvasController.fillCircle(20, new Color(0.5, 0.5, 0, 0.5), x, y);
+			canvasController.strokeCircle(20, 1, Color.BLACK, x, y);
+			canvasController.fillText(label, Color.BLACK, x + 8, y - 5);
+		}
+	}
+
+	private synchronized void normalize(final double canvasWidth, final double canvasHeight) {
+		double minX = Double.POSITIVE_INFINITY;
+		double maxX = Double.NEGATIVE_INFINITY;
+		double minY = Double.POSITIVE_INFINITY;
+		double maxY = Double.NEGATIVE_INFINITY;
+		for (Point point : points) {
+			minX = Math.min(minX, point.getX());
+			maxX = Math.max(maxX, point.getX());
+			minY = Math.min(minY, point.getY());
+			maxY = Math.max(maxY, point.getY());
+		}
+		double margin = 150;
+		for (Point point : points) {
+			double x = point.getX();
+			double y = point.getY();
+			point.setX((x - minX) / (maxX - minX) * (canvasWidth - margin * 2) + margin);
+			point.setY((y - minY) / (maxY - minY) * (canvasHeight - margin * 2) + margin);
+		}
 	}
 
 	@FXML

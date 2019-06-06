@@ -18,8 +18,11 @@ public class ComparisonWindow {
 
 	List<File> documents = new ArrayList<>();
 
-	public ComparisonWindow(final List<File> documents) {
+	private final boolean useTfIdf;
+
+	public ComparisonWindow(final List<File> documents, final boolean useTfIdf) {
 		this.documents = documents;
+		this.useTfIdf = useTfIdf;
 	}
 
 	public void start() {
@@ -27,7 +30,7 @@ public class ComparisonWindow {
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/comparison_window.fxml"));
 
-		ComparisonWindowController controller = new ComparisonWindowController(stage, documents);
+		ComparisonWindowController controller = new ComparisonWindowController(stage, documents, useTfIdf);
 		loader.setController(controller);
 
 		Scene scene;

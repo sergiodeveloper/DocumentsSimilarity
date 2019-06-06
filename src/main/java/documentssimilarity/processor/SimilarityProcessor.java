@@ -1,6 +1,6 @@
 package documentssimilarity.processor;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +8,13 @@ import java.util.Map;
 import documentssimilarity.ArrayUtils;
 import documentssimilarity.model.Document;
 import documentssimilarity.model.DocumentMetadata;
+import documentssimilarity.model.Point;
 import documentssimilarity.model.StopWord;
+import mdsj.MDSJ;
 
 public class SimilarityProcessor {
+
+	private static final int DIMENSION_RANK = 2;
 
 	private final List<Document> documents;
 
@@ -40,14 +44,25 @@ public class SimilarityProcessor {
 		}
 	}
 
-	public void process() {
+	public List<Point> process(final boolean useTfIdf) {
 		this.fillDocumentsMetadata();
 
-		double[][] distanceMatrix = generateTfIdfDistanceMatrix();
+		double[][] distanceMatrix;
 
-		for (double[] line : distanceMatrix) {
-			System.out.println(Arrays.toString(line));
+		if (useTfIdf) {
+			distanceMatrix = generateTfIdfDistanceMatrix();
+		} else {
+			distanceMatrix = generateFrequenciesDistanceMatrix();
 		}
+
+		double[][] classicalScaling = MDSJ.classicalScaling(distanceMatrix, DIMENSION_RANK);
+
+		List<Point> points = new ArrayList<>();
+		for (int i = 0; i < classicalScaling[0].length; i++) {
+			String label = documents.get(i).getName();
+			points.add(new Point(label, classicalScaling[0][i], classicalScaling[1][i]));
+		}
+		return points;
 	}
 
 	private double[][] generateFrequenciesDistanceMatrix() {

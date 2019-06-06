@@ -47,14 +47,15 @@
                   </ScrollPane>
                </content>
             </TitledPane>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <VBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#castSimilarities" text="Projetar similaridades" />
+                  <Button mnemonicParsing="false" onAction="#castFrequencySimilarities" text="Projetar similaridades baseado em frequências" />
+                  <Button mnemonicParsing="false" onAction="#castTfIdfSimilarities" text="Projetar similaridades baseado em Tf-idf" />
                </children>
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
-            </HBox>
+            </VBox>
          </children>
          <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

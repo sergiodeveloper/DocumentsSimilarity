@@ -49,11 +49,25 @@ public class MainWindowController {
 	}
 
 	@FXML
-	public void castSimilarities() {
+	public void castTfIdfSimilarities() {
 		List<File> selectedDocuments = getSelectedDocuments();
 
 		if (selectedDocuments.size() >= 2) {
-			ComparisonWindow comparisonWindow = new ComparisonWindow(selectedDocuments);
+			ComparisonWindow comparisonWindow = new ComparisonWindow(selectedDocuments, true);
+			comparisonWindow.start();
+		} else {
+			Alert errorAlert = new Alert(AlertType.INFORMATION);
+			errorAlert.setHeaderText("Por favor, selecione mais documentos");
+			errorAlert.showAndWait();
+		}
+	}
+
+	@FXML
+	public void castFrequencySimilarities() {
+		List<File> selectedDocuments = getSelectedDocuments();
+
+		if (selectedDocuments.size() >= 2) {
+			ComparisonWindow comparisonWindow = new ComparisonWindow(selectedDocuments, false);
 			comparisonWindow.start();
 		} else {
 			Alert errorAlert = new Alert(AlertType.INFORMATION);
