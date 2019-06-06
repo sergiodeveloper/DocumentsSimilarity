@@ -16,6 +16,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -34,6 +37,9 @@ public class ComparisonWindowController {
 	private Button namesButton;
 	@FXML
 	private Button galaxyButton;
+
+	private boolean showingNames = true;
+	private boolean showingGalaxy = true;
 
 	private final Stage stage;
 	private CanvasController canvasController;
@@ -100,14 +106,24 @@ public class ComparisonWindowController {
 	private void draw() {
 		udateCanvasSize();
 		normalize(canvas.getWidth(), canvas.getHeight());
+		canvasController.clear();
 		for (Point point : points) {
 			double x = point.getX();
 			double y = point.getY();
 			String label = point.getLabel();
 
+			int glowRadius = 100;
+
+			if (showingGalaxy) {
+				RadialGradient paint = new RadialGradient(0, 0, x, y, glowRadius, false, CycleMethod.NO_CYCLE,
+						new Stop(0, new Color(0.5, 0.6, 1, 0.3)), new Stop(1, Color.TRANSPARENT));
+				canvasController.fillCircle(glowRadius, paint, x, y);
+			}
 			canvasController.fillCircle(20, new Color(0.5, 0.5, 0, 0.5), x, y);
 			canvasController.strokeCircle(20, 1, Color.BLACK, x, y);
-			canvasController.fillText(label, Color.BLACK, x + 8, y - 5);
+			if (showingNames) {
+				canvasController.fillText(label, Color.BLACK, x + 27, y + 4);
+			}
 		}
 	}
 
@@ -133,28 +149,16 @@ public class ComparisonWindowController {
 
 	@FXML
 	public void namesButtonAction() {
-		changeTextNamesButton();
+		showingNames = !showingNames;
+		namesButton.setText(showingNames ? HIDE_NAMES : SHOW_NAMES);
+		draw();
 	}
 
 	@FXML
 	public void galaxyButtonAction() {
-		changeTextGalaxyButton();
-	}
-
-	private void changeTextNamesButton() {
-		if (SHOW_NAMES.equals(namesButton.getText())) {
-			namesButton.setText(HIDE_NAMES);
-		} else {
-			namesButton.setText(SHOW_NAMES);
-		}
-	}
-
-	private void changeTextGalaxyButton() {
-		if (SHOW_GALAXY.equals(galaxyButton.getText())) {
-			galaxyButton.setText(HIDE_GALAXY);
-		} else {
-			galaxyButton.setText(SHOW_GALAXY);
-		}
+		showingGalaxy = !showingGalaxy;
+		galaxyButton.setText(showingGalaxy ? HIDE_GALAXY : SHOW_GALAXY);
+		draw();
 	}
 
 }
