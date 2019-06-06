@@ -12,11 +12,17 @@ import documentssimilarity.model.Document;
 
 public class DocumentReader {
 
-	public List<Document> read(final List<File> filesToRead) throws IOException {
+	public List<Document> read(final List<File> filesToRead, final List<IOException> exceptions) {
 		final List<Document> documents = new ArrayList<>();
 
 		for (final File file : filesToRead) {
-			final List<String> lines = Files.readAllLines(Paths.get(file.getAbsolutePath()));
+			List<String> lines;
+			try {
+				lines = Files.readAllLines(Paths.get(file.getAbsolutePath()));
+			} catch (IOException e) {
+				exceptions.add(e);
+				continue;
+			}
 
 			List<String> words = new ArrayList<>();
 			for (final String preLine : lines) {

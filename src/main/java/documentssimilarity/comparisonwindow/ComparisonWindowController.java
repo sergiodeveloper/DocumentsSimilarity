@@ -2,6 +2,7 @@ package documentssimilarity.comparisonwindow;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import documentssimilarity.model.Point;
@@ -56,14 +57,17 @@ public class ComparisonWindowController {
 	}
 
 	private void process() {
-		try {
-			DocumentReader reader = new DocumentReader();
-			SimilarityProcessor processor = new SimilarityProcessor(reader.read(documents));
-			points = processor.process(useTfIdf);
-		} catch (IOException e) {
-			Alert errorAlert = new Alert(AlertType.ERROR);
-			errorAlert.setHeaderText("Erro ao ler os arquivos.");
-			errorAlert.showAndWait();
+		DocumentReader reader = new DocumentReader();
+
+		List<IOException> exceptions = new ArrayList<>();
+		SimilarityProcessor processor = new SimilarityProcessor(reader.read(documents, exceptions));
+		points = processor.process(useTfIdf);
+
+		if (!exceptions.isEmpty()) {
+			Alert warningAlert = new Alert(AlertType.WARNING);
+			warningAlert.setHeaderText("Ignorando " + exceptions.size() + " arquivo(s)");
+			warningAlert.setContentText("Verifique se estão acessíveis e se tratam de arquivos de texto");
+			warningAlert.showAndWait();
 		}
 	}
 
