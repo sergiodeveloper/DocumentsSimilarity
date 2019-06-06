@@ -15,7 +15,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
@@ -31,11 +31,11 @@ public class ComparisonWindowController {
 	private static final String SHOW_GALAXY = "Exibir Galaxy";
 	private static final String HIDE_GALAXY = "Ocultar Galaxy";
 
-	private static final int GLOW_RADIUS = 100;
+	private static final int GLOW_RADIUS = 150;
 	private static final int POINT_RADIUS = 15;
 
 	@FXML
-	private VBox canvasParent;
+	private ScrollPane canvasParent;
 	@FXML
 	private Canvas canvas;
 	@FXML
@@ -73,14 +73,16 @@ public class ComparisonWindowController {
 		List<IOException> exceptions = new ArrayList<>();
 		SimilarityProcessor processor = new SimilarityProcessor(reader.read(documents, exceptions));
 		points = processor.process(useTfIdf);
+		draw();
 
 		if (!exceptions.isEmpty()) {
-			Alert warningAlert = new Alert(AlertType.WARNING);
-			warningAlert.setHeaderText("Ignorando " + exceptions.size() + " arquivo(s)");
-			warningAlert.setContentText("Verifique se estão acessíveis e se tratam de arquivos de texto");
-			warningAlert.showAndWait();
+			Platform.runLater(() -> {
+				Alert warningAlert = new Alert(AlertType.WARNING);
+				warningAlert.setHeaderText("Ignorando " + exceptions.size() + " arquivo(s)");
+				warningAlert.setContentText("Verifique se estão acessíveis e se tratam de arquivos de texto");
+				warningAlert.show();
+			});
 		}
-		draw();
 	}
 
 	private void updateCanvasSize() {
@@ -93,7 +95,7 @@ public class ComparisonWindowController {
 	private void configureStage() {
 		stage.widthProperty().addListener((o, old, value) -> {
 			canvas.setWidth(0);
-			PauseTransition delay = new PauseTransition(Duration.millis(100));
+			PauseTransition delay = new PauseTransition(Duration.millis(50));
 			delay.setOnFinished(event -> {
 				canvas.setWidth(canvasParent.getWidth());
 				draw();
@@ -102,7 +104,7 @@ public class ComparisonWindowController {
 		});
 		stage.heightProperty().addListener((o, old, value) -> {
 			canvas.setHeight(0);
-			PauseTransition delay = new PauseTransition(Duration.millis(100));
+			PauseTransition delay = new PauseTransition(Duration.millis(50));
 			delay.setOnFinished(event -> {
 				canvas.setHeight(canvasParent.getHeight());
 				draw();
