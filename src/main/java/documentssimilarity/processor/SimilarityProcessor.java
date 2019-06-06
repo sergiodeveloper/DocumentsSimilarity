@@ -1,6 +1,5 @@
 package documentssimilarity.processor;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +20,7 @@ public class SimilarityProcessor {
 		this.documents = documents;
 
 		for (final Document document : documents) {
-			this.documentMetadata.put(document, new DocumentMetadata());
+			this.documentMetadata.put(document, new DocumentMetadata(document));
 		}
 	}
 
@@ -44,9 +43,9 @@ public class SimilarityProcessor {
 	public void process() {
 		this.fillDocumentsMetadata();
 
-		double[][] frequencyDistanceMatrix = generateFrequenciesDistanceMatrix();
+		double[][] distanceMatrix = generateTfIdfDistanceMatrix();
 
-		for (double[] line : frequencyDistanceMatrix) {
+		for (double[] line : distanceMatrix) {
 			System.out.println(Arrays.toString(line));
 		}
 	}
@@ -61,6 +60,23 @@ public class SimilarityProcessor {
 
 				double distance = ArrayUtils.euclidianDistance(documentMetadata.get(first).getFrequenciesVector(),
 						documentMetadata.get(second).getFrequenciesVector());
+				distanceMatrix[i][j] = distance;
+			}
+		}
+
+		return distanceMatrix;
+	}
+
+	private double[][] generateTfIdfDistanceMatrix() {
+		double[][] distanceMatrix = new double[documents.size()][documents.size()];
+
+		for (int i = 0; i < documents.size(); i++) {
+			for (int j = 0; j < documents.size(); j++) {
+				Document first = documents.get(i);
+				Document second = documents.get(j);
+
+				double distance = ArrayUtils.euclidianDistance(documentMetadata.get(first).getTfIdfVector(documents),
+						documentMetadata.get(second).getTfIdfVector(documents));
 				distanceMatrix[i][j] = distance;
 			}
 		}

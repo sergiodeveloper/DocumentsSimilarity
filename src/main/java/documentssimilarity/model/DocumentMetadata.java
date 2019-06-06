@@ -1,5 +1,6 @@
 package documentssimilarity.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -9,8 +10,12 @@ import java.util.Map.Entry;
 public class DocumentMetadata {
 
 	private int numberOfWords = 0;
-
 	private final Map<String, Integer> wordCount = new LinkedHashMap<>();
+	private final Document document;
+
+	public DocumentMetadata(final Document document) {
+		this.document = document;
+	}
 
 	public void addWord(final String word) {
 		this.numberOfWords++;
@@ -53,18 +58,18 @@ public class DocumentMetadata {
 		return frequencies;
 	}
 
-	public double[] getTfIdfVector(final Collection<DocumentMetadata> allDocumentsMetadata) {
+	public double[] getTfIdfVector(final Collection<Document> allDocuments) {
 		final int[] wordCountVector = this.getWordCountVector();
 		final double[] tfidf = new double[wordCountVector.length];
-
-		int n = allDocumentsMetadata.size();
+		int n = allDocuments.size();
 
 		for (int i = 0; i < wordCountVector.length; i++) {
 			double tf = wordCountVector[i];
+			String word = getWordFromIndex(i);
 
 			int documentsContainingWord = 1;
-			for (DocumentMetadata metadata : allDocumentsMetadata) {
-				if (metadata != this && metadata.getWordCountVector()[i] != 0) {
+			for (Document doc : allDocuments) {
+				if (doc != this.document && doc.getWords().contains(word)) {
 					documentsContainingWord++;
 				}
 			}
@@ -73,6 +78,10 @@ public class DocumentMetadata {
 			tfidf[i] = tf * idf;
 		}
 		return tfidf;
+	}
+
+	public String getWordFromIndex(final int index) {
+		return new ArrayList<>(this.wordCount.keySet()).get(index);
 	}
 
 	public int count(final String word) {
