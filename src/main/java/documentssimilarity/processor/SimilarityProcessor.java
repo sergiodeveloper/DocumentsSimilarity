@@ -6,10 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import documentssimilarity.exception.MetadataDiferentSizeException;
+import documentssimilarity.ArrayUtils;
 import documentssimilarity.model.Document;
 import documentssimilarity.model.DocumentMetadata;
-import documentssimilarity.model.Similarity;
 import documentssimilarity.model.StopWord;
 
 public class SimilarityProcessor {
@@ -44,54 +43,29 @@ public class SimilarityProcessor {
 
 	public void process() {
 		this.fillDocumentsMetadata();
-		this.calculateDocumentsDistance();
 
-		for (final Document document : this.documents) {
-			final double[] frequencies = this.documentMetadata.get(document).getFrequenciesVector();
+		double[][] frequencyDistanceMatrix = generateFrequenciesDistanceMatrix();
 
-			System.out.println(Arrays.toString(frequencies));
-			System.out.println(frequencies.length);
+		for (double[] line : frequencyDistanceMatrix) {
+			System.out.println(Arrays.toString(line));
 		}
 	}
 
-	private List<Similarity> calculateDocumentsDistance() {
-		final List<Similarity> similarities = new ArrayList<>();
+	private double[][] generateFrequenciesDistanceMatrix() {
+		double[][] distanceMatrix = new double[documents.size()][documents.size()];
 
-		for (final Document document : this.documents) {
+		for (int i = 0; i < documents.size(); i++) {
+			for (int j = 0; j < documents.size(); j++) {
+				Document first = documents.get(i);
+				Document second = documents.get(j);
 
-			for (final Document otherDocument : this.documents) {
-				if(document == otherDocument) {
-					continue;
-				}
-
-				final double distance = this.calculateDistance(
-						this.documentMetadata.get(document),
-						this.documentMetadata.get(otherDocument));
-
-				similarities.add(new Similarity(document.getName(), otherDocument.getName(), distance));
+				double distance = ArrayUtils.euclidianDistance(documentMetadata.get(first).getFrequenciesVector(),
+						documentMetadata.get(second).getFrequenciesVector());
+				distanceMatrix[i][j] = distance;
 			}
 		}
 
-		return similarities;
-	}
-
-	private double calculateDistance(final DocumentMetadata metadata, final DocumentMetadata otherMetadata) {
-
-		if(metadata.size() != otherMetadata.size()) {
-			throw new MetadataDiferentSizeException();
-		}
-
-		double acumulated = 0d;
-
-		final Map<String, Integer> map = metadata.getWordCount();
-		for (final Map.Entry<String, Integer> wordCount : map.entrySet()) {
-
-			final Map<String, Integer> otherMap = otherMetadata.getWordCount();
-			acumulated += Math.pow(wordCount.getValue() - otherMap.get(wordCount.getKey()),2);
-		}
-
-
-		return Math.sqrt(acumulated);
+		return distanceMatrix;
 	}
 
 }
