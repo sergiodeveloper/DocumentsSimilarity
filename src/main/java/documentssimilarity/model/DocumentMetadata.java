@@ -1,6 +1,5 @@
 package documentssimilarity.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -12,6 +11,9 @@ public class DocumentMetadata {
 	private int numberOfWords = 0;
 	private final Map<String, Integer> wordCount = new LinkedHashMap<>();
 	private final Document document;
+
+	private double[] tfIdfVector;
+	private int[] wordCountVector;
 
 	public DocumentMetadata(final Document document) {
 		this.document = document;
@@ -39,13 +41,17 @@ public class DocumentMetadata {
 	}
 
 	private int[] getWordCountVector() {
-		final int[] vector = new int[this.wordCount.size()];
+		if(this.wordCountVector != null) {
+			return this.wordCountVector;
+		}
+
+		this.wordCountVector = new int[this.wordCount.size()];
 		int index = 0;
 		for (final Entry<String, Integer> entry : this.wordCount.entrySet()) {
-			vector[index] = entry.getValue();
+			this.wordCountVector[index] = entry.getValue();
 			index++;
 		}
-		return vector;
+		return this.wordCountVector;
 	}
 
 	public double[] getFrequenciesVector() {
@@ -58,30 +64,30 @@ public class DocumentMetadata {
 		return frequencies;
 	}
 
-	public double[] getTfIdfVector(final Collection<Document> allDocuments) {
+	public double[] getTfIdfVector(final Collection<DocumentMetadata> allMetadata) {
+		if(this.tfIdfVector != null) {
+			return this.tfIdfVector;
+		}
+
 		final int[] wordCountVector = this.getWordCountVector();
-		final double[] tfidf = new double[wordCountVector.length];
-		int n = allDocuments.size();
+		this.tfIdfVector = new double[this.wordCount.size()];
+
+		final int docsCount = allMetadata.size();
 
 		for (int i = 0; i < wordCountVector.length; i++) {
-			double tf = wordCountVector[i];
-			String word = getWordFromIndex(i);
+			final double tf = wordCountVector[i];
 
 			int documentsContainingWord = 1;
-			for (Document doc : allDocuments) {
-				if (doc != this.document && doc.getWords().contains(word)) {
-					documentsContainingWord++;
+			for (final DocumentMetadata otherMetadata : allMetadata) {
+				if (otherMetadata != this && otherMetadata.getWordCountVector()[i] > 0) {
+					++documentsContainingWord;
 				}
 			}
-			double idf = Math.log((double) n / documentsContainingWord);
+			final double idf = Math.log((double) docsCount / documentsContainingWord);
 
-			tfidf[i] = tf * idf;
+			this.tfIdfVector[i] = tf * idf;
 		}
-		return tfidf;
-	}
-
-	public String getWordFromIndex(final int index) {
-		return new ArrayList<>(this.wordCount.keySet()).get(index);
+		return this.tfIdfVector;
 	}
 
 	public int count(final String word) {

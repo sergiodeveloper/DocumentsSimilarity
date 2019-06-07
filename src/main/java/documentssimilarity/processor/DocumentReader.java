@@ -19,14 +19,14 @@ public class DocumentReader {
 			List<String> lines;
 			try {
 				lines = Files.readAllLines(Paths.get(file.getAbsolutePath()));
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				exceptions.add(e);
 				continue;
 			}
 
-			List<String> words = new ArrayList<>();
+			final List<String> words = new ArrayList<>();
 			for (final String preLine : lines) {
-				String line = removePunctuation(preLine).toLowerCase();
+				final String line = removeUnnecessary(preLine).toLowerCase();
 				words.addAll(Arrays.asList(line.split("\\s+")));
 			}
 
@@ -35,8 +35,8 @@ public class DocumentReader {
 		return documents;
 	}
 
-	private String removePunctuation(final String word) {
-		return word.replaceAll("\\p{Punct}", "");
+	private static String removeUnnecessary(final String word) {
+		return word.replaceAll("\\p{Punct}|\\d", "");
 	}
 
 }

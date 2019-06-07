@@ -60,24 +60,24 @@ public class ComparisonWindowController {
 	}
 
 	public void init() {
-		canvasController = new CanvasController(canvas);
-		configureStage();
-		updateCanvasSize();
-		process();
-		draw();
+		this.canvasController = new CanvasController(this.canvas);
+		this.configureStage();
+		this.updateCanvasSize();
+		this.process();
+		this.draw();
 	}
 
 	private void process() {
-		DocumentReader reader = new DocumentReader();
+		final DocumentReader reader = new DocumentReader();
 
-		List<IOException> exceptions = new ArrayList<>();
-		SimilarityProcessor processor = new SimilarityProcessor(reader.read(documents, exceptions));
-		points = processor.process(useTfIdf);
-		draw();
+		final List<IOException> exceptions = new ArrayList<>();
+		final SimilarityProcessor processor = new SimilarityProcessor(reader.read(this.documents, exceptions));
+		this.points = processor.process(this.useTfIdf);
+		this.draw();
 
 		if (!exceptions.isEmpty()) {
 			Platform.runLater(() -> {
-				Alert warningAlert = new Alert(AlertType.WARNING);
+				final Alert warningAlert = new Alert(AlertType.WARNING);
 				warningAlert.setHeaderText("Ignorando " + exceptions.size() + " arquivo(s)");
 				warningAlert.setContentText("Verifique se estão acessíveis e se tratam de arquivos de texto");
 				warningAlert.show();
@@ -87,27 +87,27 @@ public class ComparisonWindowController {
 
 	private void updateCanvasSize() {
 		Platform.runLater(() -> {
-			canvas.setWidth(canvasParent.getWidth());
-			canvas.setHeight(canvasParent.getHeight());
+			this.canvas.setWidth(this.canvasParent.getWidth());
+			this.canvas.setHeight(this.canvasParent.getHeight());
 		});
 	}
 
 	private void configureStage() {
-		stage.widthProperty().addListener((o, old, value) -> {
-			canvas.setWidth(0);
-			PauseTransition delay = new PauseTransition(Duration.millis(50));
+		this.stage.widthProperty().addListener((o, old, value) -> {
+			this.canvas.setWidth(0);
+			final PauseTransition delay = new PauseTransition(Duration.millis(50));
 			delay.setOnFinished(event -> {
-				canvas.setWidth(canvasParent.getWidth());
-				draw();
+				this.canvas.setWidth(this.canvasParent.getWidth());
+				this.draw();
 			});
 			delay.play();
 		});
-		stage.heightProperty().addListener((o, old, value) -> {
-			canvas.setHeight(0);
-			PauseTransition delay = new PauseTransition(Duration.millis(50));
+		this.stage.heightProperty().addListener((o, old, value) -> {
+			this.canvas.setHeight(0);
+			final PauseTransition delay = new PauseTransition(Duration.millis(50));
 			delay.setOnFinished(event -> {
-				canvas.setHeight(canvasParent.getHeight());
-				draw();
+				this.canvas.setHeight(this.canvasParent.getHeight());
+				this.draw();
 			});
 			delay.play();
 		});
@@ -115,37 +115,37 @@ public class ComparisonWindowController {
 
 	private void draw() {
 		Platform.runLater(() -> {
-			canvasController.clear();
-			updateCanvasSize();
-			if (points == null) {
-				Font font = new Font(20);
-				canvasController.fillText("Por favor aguarde...", Color.BLACK, font, 100, 100);
+			this.canvasController.clear();
+			this.updateCanvasSize();
+			if (this.points == null) {
+				final Font font = new Font(20);
+				this.canvasController.fillText("Por favor aguarde...", Color.BLACK, font, 100, 100);
 				return;
 			}
-			normalize(canvas.getWidth(), canvas.getHeight());
+			this.normalize(this.canvas.getWidth(), this.canvas.getHeight());
 
-			if (showingGalaxy) {
-				for (Point point : points) {
-					double x = point.getX();
-					double y = point.getY();
-					RadialGradient paint = new RadialGradient(0, 0, x, y, GLOW_RADIUS, false, CycleMethod.NO_CYCLE,
+			if (this.showingGalaxy) {
+				for (final Point point : this.points) {
+					final double x = point.getX();
+					final double y = point.getY();
+					final RadialGradient paint = new RadialGradient(0, 0, x, y, GLOW_RADIUS, false, CycleMethod.NO_CYCLE,
 							new Stop(0, new Color(0.5, 0.6, 1, 0.3)), new Stop(1, Color.TRANSPARENT));
-					canvasController.fillCircle(GLOW_RADIUS, paint, x, y);
+					this.canvasController.fillCircle(GLOW_RADIUS, paint, x, y);
 				}
 			}
-			for (Point point : points) {
-				double x = point.getX();
-				double y = point.getY();
-				canvasController.fillCircle(POINT_RADIUS, new Color(0.5, 0.5, 0, 0.5), x, y);
-				canvasController.strokeCircle(POINT_RADIUS, 1, Color.BLACK, x, y);
+			for (final Point point : this.points) {
+				final double x = point.getX();
+				final double y = point.getY();
+				this.canvasController.fillCircle(POINT_RADIUS, new Color(0.5, 0.5, 0, 0.5), x, y);
+				this.canvasController.strokeCircle(POINT_RADIUS, 1, Color.BLACK, x, y);
 			}
-			if (showingNames) {
-				for (Point point : points) {
-					double x = point.getX();
-					double y = point.getY();
-					String label = point.getLabel();
-					Font font = new Font(12);
-					canvasController.fillText(label, Color.BLACK, font, x + POINT_RADIUS * 1.4, y + POINT_RADIUS / 3.0);
+			if (this.showingNames) {
+				for (final Point point : this.points) {
+					final double x = point.getX();
+					final double y = point.getY();
+					final String label = point.getLabel();
+					final Font font = new Font(12);
+					this.canvasController.fillText(label, Color.BLACK, font, x + POINT_RADIUS * 1.4, y + POINT_RADIUS / 3.0);
 				}
 			}
 		});
@@ -156,33 +156,37 @@ public class ComparisonWindowController {
 		double maxX = Double.NEGATIVE_INFINITY;
 		double minY = Double.POSITIVE_INFINITY;
 		double maxY = Double.NEGATIVE_INFINITY;
-		for (Point point : points) {
+		for (final Point point : this.points) {
 			minX = Math.min(minX, point.getX());
 			maxX = Math.max(maxX, point.getX());
 			minY = Math.min(minY, point.getY());
 			maxY = Math.max(maxY, point.getY());
 		}
-		double margin = 150;
-		for (Point point : points) {
-			double x = point.getX();
-			double y = point.getY();
-			point.setX((x - minX) / (maxX - minX) * (canvasWidth - margin * 2) + margin);
-			point.setY((y - minY) / (maxY - minY) * (canvasHeight - margin * 2) + margin);
+		final double margin = 150;
+		for (final Point point : this.points) {
+			final double x = point.getX();
+			final double y = point.getY();
+
+			final double diffX = maxX - minX;
+			final double diffY = maxY - minY;
+
+			point.setX((x - minX) / Math.max(diffX, diffY) * (canvasWidth - margin * 2) + margin);
+			point.setY((y - minY) / Math.max(diffX, diffY) * (canvasHeight - margin * 2) + margin);
 		}
 	}
 
 	@FXML
 	public void namesButtonAction() {
-		showingNames = !showingNames;
-		namesButton.setText(showingNames ? HIDE_NAMES : SHOW_NAMES);
-		draw();
+		this.showingNames = !this.showingNames;
+		this.namesButton.setText(this.showingNames ? HIDE_NAMES : SHOW_NAMES);
+		this.draw();
 	}
 
 	@FXML
 	public void galaxyButtonAction() {
-		showingGalaxy = !showingGalaxy;
-		galaxyButton.setText(showingGalaxy ? HIDE_GALAXY : SHOW_GALAXY);
-		draw();
+		this.showingGalaxy = !this.showingGalaxy;
+		this.galaxyButton.setText(this.showingGalaxy ? HIDE_GALAXY : SHOW_GALAXY);
+		this.draw();
 	}
 
 }
