@@ -10,14 +10,9 @@ public class DocumentMetadata {
 
 	private int numberOfWords = 0;
 	private final Map<String, Integer> wordCount = new LinkedHashMap<>();
-	private final Document document;
 
 	private double[] tfIdfVector;
 	private int[] wordCountVector;
-
-	public DocumentMetadata(final Document document) {
-		this.document = document;
-	}
 
 	public void addWord(final String word) {
 		this.numberOfWords++;

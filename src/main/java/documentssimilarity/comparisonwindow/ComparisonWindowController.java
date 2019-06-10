@@ -67,7 +67,7 @@ public class ComparisonWindowController {
 		this.updateCanvasSize();
 		this.process();
 		this.draw();
-		System.out.println("Tempo Total: " + (System.currentTimeMillis() - tempoInicio));
+		System.out.println("Tempo Total: " + (System.currentTimeMillis() - tempoInicio) / 100 + "s");
 	}
 
 	private void process() {
@@ -188,7 +188,7 @@ public class ComparisonWindowController {
 			final double normalizedX = (x - minX) * ratioX + marginLeft;
 			final double normalizedY = (y - minY) * ratioY + marginTop;
 
-			normalizedPoints.add(new Point(point.getLabel(), normalizedX, normalizedY));
+			this.normalizedPoints.add(new Point(point.getLabel(), normalizedX, normalizedY));
 		}
 	}
 

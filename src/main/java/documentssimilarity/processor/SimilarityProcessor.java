@@ -24,7 +24,7 @@ public class SimilarityProcessor {
 		this.documents = documents;
 
 		for (final Document document : documents) {
-			this.documentMetadata.put(document, new DocumentMetadata(document));
+			this.documentMetadata.put(document, new DocumentMetadata());
 		}
 	}
 
