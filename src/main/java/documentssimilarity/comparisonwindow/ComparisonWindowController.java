@@ -177,15 +177,15 @@ public class ComparisonWindowController {
 
 	@FXML
 	public void namesButtonAction() {
-		this.showingNames = !this.showingNames;
 		this.namesButton.setText(this.showingNames ? HIDE_NAMES : SHOW_NAMES);
+		this.showingNames = !this.showingNames;
 		this.draw();
 	}
 
 	@FXML
 	public void galaxyButtonAction() {
-		this.showingGalaxy = !this.showingGalaxy;
 		this.galaxyButton.setText(this.showingGalaxy ? HIDE_GALAXY : SHOW_GALAXY);
+		this.showingGalaxy = !this.showingGalaxy;
 		this.draw();
 	}
 
