@@ -50,31 +50,31 @@ public class SimilarityProcessor {
 		double[][] distanceMatrix;
 
 		if (useTfIdf) {
-			distanceMatrix = generateTfIdfDistanceMatrix();
+			distanceMatrix = this.generateTfIdfDistanceMatrix();
 		} else {
-			distanceMatrix = generateFrequenciesDistanceMatrix();
+			distanceMatrix = this.generateFrequenciesDistanceMatrix();
 		}
 
-		double[][] classicalScaling = MDSJ.classicalScaling(distanceMatrix, DIMENSION_RANK);
+		final double[][] classicalScaling = MDSJ.classicalScaling(distanceMatrix, DIMENSION_RANK);
 
-		List<Point> points = new ArrayList<>();
+		final List<Point> points = new ArrayList<>();
 		for (int i = 0; i < classicalScaling[0].length; i++) {
-			String label = documents.get(i).getName();
+			final String label = this.documents.get(i).getName();
 			points.add(new Point(label, classicalScaling[0][i], classicalScaling[1][i]));
 		}
 		return points;
 	}
 
 	private double[][] generateFrequenciesDistanceMatrix() {
-		double[][] distanceMatrix = new double[documents.size()][documents.size()];
+		final double[][] distanceMatrix = new double[this.documents.size()][this.documents.size()];
 
-		for (int i = 0; i < documents.size(); i++) {
-			for (int j = 0; j < documents.size(); j++) {
-				Document first = documents.get(i);
-				Document second = documents.get(j);
+		for (int i = 0; i < this.documents.size(); i++) {
+			for (int j = 0; j < this.documents.size(); j++) {
+				final Document first = this.documents.get(i);
+				final Document second = this.documents.get(j);
 
-				double distance = ArrayUtils.euclidianDistance(documentMetadata.get(first).getFrequenciesVector(),
-						documentMetadata.get(second).getFrequenciesVector());
+				final double distance = ArrayUtils.euclidianDistance(this.documentMetadata.get(first).getFrequenciesVector(),
+						this.documentMetadata.get(second).getFrequenciesVector());
 				distanceMatrix[i][j] = distance;
 			}
 		}
@@ -83,16 +83,20 @@ public class SimilarityProcessor {
 	}
 
 	private double[][] generateTfIdfDistanceMatrix() {
-		double[][] distanceMatrix = new double[documents.size()][documents.size()];
+		final double[][] distanceMatrix = new double[this.documents.size()][this.documents.size()];
 
-		for (int i = 0; i < documents.size(); i++) {
-			for (int j = 0; j < documents.size(); j++) {
-				Document first = documents.get(i);
-				Document second = documents.get(j);
+		for (int i = 0; i < this.documents.size(); i++) {
+			final double[] tfIdfVector = this.documentMetadata.get(this.documents.get(i))
+					.getTfIdfVector(this.documentMetadata.values());
 
-				double distance = ArrayUtils.euclidianDistance(documentMetadata.get(first).getTfIdfVector(documents),
-						documentMetadata.get(second).getTfIdfVector(documents));
+			for (int j = 0; j < i; j++) {
+				final double[] tfIdfVector2 = this.documentMetadata.get(this.documents.get(j))
+						.getTfIdfVector(this.documentMetadata.values());
+
+				final double distance = ArrayUtils.euclidianDistance(tfIdfVector,tfIdfVector2);
+
 				distanceMatrix[i][j] = distance;
+				distanceMatrix[j][i] = distance;
 			}
 		}
 
