@@ -32,7 +32,7 @@ public class ComparisonWindowController {
 	private static final String HIDE_GALAXY = "Ocultar Galaxy";
 
 	private static final int GLOW_RADIUS = 150;
-	private static final int POINT_RADIUS = 15;
+	private static final int POINT_RADIUS = 10;
 
 	@FXML
 	private ScrollPane canvasParent;
@@ -60,11 +60,13 @@ public class ComparisonWindowController {
 	}
 
 	public void init() {
+		final long tempoInicio = System.currentTimeMillis();
 		this.canvasController = new CanvasController(this.canvas);
 		this.configureStage();
 		this.updateCanvasSize();
 		this.process();
 		this.draw();
+		System.out.println("Tempo Total: "+(System.currentTimeMillis()-tempoInicio));
 	}
 
 	private void process() {
@@ -177,15 +179,15 @@ public class ComparisonWindowController {
 
 	@FXML
 	public void namesButtonAction() {
-		this.namesButton.setText(this.showingNames ? HIDE_NAMES : SHOW_NAMES);
 		this.showingNames = !this.showingNames;
+		this.namesButton.setText(this.showingNames ? HIDE_NAMES : SHOW_NAMES);
 		this.draw();
 	}
 
 	@FXML
 	public void galaxyButtonAction() {
-		this.galaxyButton.setText(this.showingGalaxy ? HIDE_GALAXY : SHOW_GALAXY);
 		this.showingGalaxy = !this.showingGalaxy;
+		this.galaxyButton.setText(this.showingGalaxy ? HIDE_GALAXY : SHOW_GALAXY);
 		this.draw();
 	}
 
