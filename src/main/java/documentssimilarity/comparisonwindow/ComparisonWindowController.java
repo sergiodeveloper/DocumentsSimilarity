@@ -119,7 +119,7 @@ public class ComparisonWindowController {
 			updateCanvasSize();
 			if (points == null) {
 				Font font = new Font(20);
-				canvasController.fillText("Por favor aguarde...", Color.BLACK, font, 100, 100);
+				canvasController.fillText("Por favor aguarde...", Color.BLACK, font, 100, 100, 0);
 				return;
 			}
 			normalize(canvas.getWidth(), canvas.getHeight());
@@ -145,7 +145,7 @@ public class ComparisonWindowController {
 					double y = point.getY();
 					String label = point.getLabel();
 					Font font = new Font(12);
-					canvasController.fillText(label, Color.BLACK, font, x + POINT_RADIUS * 1.4, y + POINT_RADIUS / 3.0);
+					canvasController.fillText(label, Color.BLACK, font, x + POINT_RADIUS * 1.4, y - POINT_RADIUS / 15.0, -20);
 				}
 			}
 		});

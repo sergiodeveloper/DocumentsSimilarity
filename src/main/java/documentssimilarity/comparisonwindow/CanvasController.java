@@ -31,10 +31,17 @@ public class CanvasController {
 		g.strokeOval(x - radius, y - radius, radius * 2, radius * 2);
 	}
 
-	public void fillText(final String text, final Paint paint, final Font font, final double x, final double y) {
+	public void fillText(final String text, final Paint paint, final Font font, final double x, final double y,
+			final double rotation) {
+		g.save();
+
 		g.setFill(paint);
 		g.setFont(font);
-		g.fillText(text, x, y);
+		g.translate(x, y);
+		g.rotate(rotation);
+		g.fillText(text, 0, 0);
+
+		g.restore();
 	}
 
 }
