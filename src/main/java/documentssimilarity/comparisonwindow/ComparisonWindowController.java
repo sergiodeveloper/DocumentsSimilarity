@@ -52,6 +52,7 @@ public class ComparisonWindowController {
 	private final boolean useTfIdf;
 
 	private List<Point> points;
+	private final List<Point> normalizedPoints = new ArrayList<>();
 
 	public ComparisonWindowController(final Stage stage, final List<File> documents, final boolean useTfIdf) {
 		this.stage = stage;
@@ -66,7 +67,7 @@ public class ComparisonWindowController {
 		this.updateCanvasSize();
 		this.process();
 		this.draw();
-		System.out.println("Tempo Total: "+(System.currentTimeMillis()-tempoInicio));
+		System.out.println("Tempo Total: " + (System.currentTimeMillis() - tempoInicio));
 	}
 
 	private void process() {
@@ -127,33 +128,36 @@ public class ComparisonWindowController {
 			this.normalize(this.canvas.getWidth(), this.canvas.getHeight());
 
 			if (this.showingGalaxy) {
-				for (final Point point : this.points) {
+				for (final Point point : this.normalizedPoints) {
 					final double x = point.getX();
 					final double y = point.getY();
-					final RadialGradient paint = new RadialGradient(0, 0, x, y, GLOW_RADIUS, false, CycleMethod.NO_CYCLE,
-							new Stop(0, new Color(0.5, 0.6, 1, 0.3)), new Stop(1, Color.TRANSPARENT));
+					final RadialGradient paint = new RadialGradient(0, 0, x, y, GLOW_RADIUS, false,
+							CycleMethod.NO_CYCLE, new Stop(0, new Color(0.5, 0.6, 1, 0.3)),
+							new Stop(1, Color.TRANSPARENT));
 					this.canvasController.fillCircle(GLOW_RADIUS, paint, x, y);
 				}
 			}
-			for (final Point point : this.points) {
+			for (final Point point : this.normalizedPoints) {
 				final double x = point.getX();
 				final double y = point.getY();
 				this.canvasController.fillCircle(POINT_RADIUS, new Color(0.5, 0.5, 0, 0.5), x, y);
 				this.canvasController.strokeCircle(POINT_RADIUS, 1, Color.BLACK, x, y);
 			}
 			if (this.showingNames) {
-				for (final Point point : this.points) {
+				for (final Point point : this.normalizedPoints) {
 					final double x = point.getX();
 					final double y = point.getY();
 					final String label = point.getLabel();
 					final Font font = new Font(12);
-					this.canvasController.fillText(label, Color.BLACK, font, x + POINT_RADIUS * 1.4, y - POINT_RADIUS / 15.0, -20);
+					this.canvasController.fillText(label, Color.BLACK, font, x + POINT_RADIUS * 1.4,
+							y - POINT_RADIUS / 15.0, -20);
 				}
 			}
 		});
 	}
 
 	private synchronized void normalize(final double canvasWidth, final double canvasHeight) {
+		this.normalizedPoints.clear();
 		double minX = Double.POSITIVE_INFINITY;
 		double maxX = Double.NEGATIVE_INFINITY;
 		double minY = Double.POSITIVE_INFINITY;
@@ -164,16 +168,27 @@ public class ComparisonWindowController {
 			minY = Math.min(minY, point.getY());
 			maxY = Math.max(maxY, point.getY());
 		}
+
+		final double diffX = maxX - minX;
+		final double diffY = maxY - minY;
+
 		final double margin = 150;
+		final double marginLeft = (canvasWidth - (maxX - minX) / Math.max(diffX, diffY) * (canvasWidth - margin * 2))
+				/ 2.4;
+		final double marginTop = (canvasHeight - (maxY - minY) / Math.max(diffX, diffY) * (canvasHeight - margin * 2))
+				/ 2;
+
+		final double ratioX = (canvasWidth - margin * 2) / Math.max(diffX, diffY);
+		final double ratioY = (canvasHeight - margin * 2) / Math.max(diffX, diffY);
+
 		for (final Point point : this.points) {
 			final double x = point.getX();
 			final double y = point.getY();
 
-			final double diffX = maxX - minX;
-			final double diffY = maxY - minY;
+			final double normalizedX = (x - minX) * ratioX + marginLeft;
+			final double normalizedY = (y - minY) * ratioY + marginTop;
 
-			point.setX((x - minX) / Math.max(diffX, diffY) * (canvasWidth - margin * 2) + margin);
-			point.setY((y - minY) / Math.max(diffX, diffY) * (canvasHeight - margin * 2) + margin);
+			normalizedPoints.add(new Point(point.getLabel(), normalizedX, normalizedY));
 		}
 	}
 
