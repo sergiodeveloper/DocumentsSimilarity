@@ -41,6 +41,7 @@
 							<mainClass>documentssimilarity.SimilarityApplication</mainClass>
 						</manifest>
 					</archive>
+					<finalName>${artifactId}</finalName>
 				</configuration>
 			</plugin>
 		</plugins>
