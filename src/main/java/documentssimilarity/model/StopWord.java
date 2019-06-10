@@ -29,7 +29,15 @@ public class StopWord {
 				// palavras descobertas conforme execução do processamento
 				"e", "i","ou",
 				"bíblia", "capítulo", "equiv.",
-				"httpsitesgooglecomsitebiblialivre");
+				"httpsitesgooglecomsitebiblialivre",
+				
+
+				// INGLES
+				"the", "it", "this", "those", "that", "these",
+				"a", "an", "in", "on", "onto", "for", "of", "to",
+				"under", "over", "onto", "since", "until", "behind",
+				"without", "with", "chapter"
+		);
 	}
 
 }
