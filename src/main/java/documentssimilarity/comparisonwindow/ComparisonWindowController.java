@@ -61,13 +61,11 @@ public class ComparisonWindowController {
 	}
 
 	public void init() {
-		final long tempoInicio = System.currentTimeMillis();
 		this.canvasController = new CanvasController(this.canvas);
 		this.configureStage();
 		this.updateCanvasSize();
 		this.process();
 		this.draw();
-		System.out.println("Tempo Total: " + (System.currentTimeMillis() - tempoInicio) / 100 + "s");
 	}
 
 	private void process() {

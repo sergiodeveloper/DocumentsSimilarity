@@ -24,20 +24,19 @@ public class StopWord {
 				// preposições
 				"ante", "até", "após", "com", "contra", "de",
 				"desde", "em", "entre", "para", "por", "perante",
-				"ser", "sem", "sob", "sobre", "traz",
+				"ser", "sem", "sob", "sobre", "trás",
 
 				// palavras descobertas conforme execução do processamento
 				"e", "i","ou",
 				"bíblia", "capítulo", "equiv.",
 				"httpsitesgooglecomsitebiblialivre",
-				
 
 				// INGLES
 				"the", "it", "this", "those", "that", "these",
 				"a", "an", "in", "on", "onto", "for", "of", "to",
 				"under", "over", "onto", "since", "until", "behind",
 				"without", "with", "chapter"
-		);
+				);
 	}
 
 }
